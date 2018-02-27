@@ -6,7 +6,7 @@ import math
 import numpy as np
 from heapq import heapify, heappop, heappush
 
-import helicoptermom.lib.gameobjects
+import helicoptermom.lib.gameobjects as objects
 from helicoptermom.lib.utils import neighbors_of
 
 
@@ -86,7 +86,7 @@ def dijkstra(world, snake):
 
         # consider neighbors of this vertex
         for x, y in neighbors_of(nv_x, nv_y, world):
-            if world.map[y][x] == game_objects.MAP_SNAKE:
+            if world.map[y][x] == objects.MAP_SNAKE:
                 d[y][x] = -1
                 p[y][x] = -1
             elif d[nv_y][nv_x] + 1 < d[y][x]:

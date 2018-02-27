@@ -2,6 +2,8 @@
 Classes representing objects in the game (parsed from JSON).
 """
 
+import numpy as np
+
 MAP_EMPTY = 0
 MAP_SNAKE = 1
 MAP_FOOD  = 2
@@ -31,7 +33,7 @@ class World:
         self.turn = request_json["turn"]
 
         # define and populate world map
-        self.map = [[MAP_EMPTY for x in range(self.width)] for y in range(self.height)]
+        self.map = np.full((self.width, self.height), MAP_EMPTY)
 
         self.food = []
         for food_data in request_json["food"]["data"]:
