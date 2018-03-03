@@ -6,6 +6,7 @@ functions and classes I wrote, so good example usage for those interested.
 import bottle
 import logging
 from bottle import request
+import numpy as np
 
 import helicoptermom.lib.pathfinding as pathfinding
 from helicoptermom.lib.gameobjects import World
@@ -36,16 +37,30 @@ def move():
         path = pathfinding.find_path_dijkstra(food_x, food_y, predecessor)
         next_point_options.add(path[0])  # only get the NEXT path location
 
-    # # For each option, simulate snake move and calculate Vornoi zones
-    # highest_vornoi_area = -1
-    # highest_scoring_option = None
-    # for next_point in next_point_options:
-    #     np_scores, predecessor = pathfinding.dijkstra(world, next_point)
+    # Calculate d matrices for every snake
+    d_matrices = {}
+    enemy_snakes = [snake for snake in world.snakes.values() if snake.id != world.you.id]
+    for snake in enemy_snakes:
+        d_matrix = pathfinding.dijkstra(world, snake.head)
+        d_matrices.update({snake.id, d_matrix})
 
+    # For each option, simulate snake move and calculate Vornoi zones
+    highest_vornoi_area = -1
+    highest_scoring_option = None
+    for next_point in next_point_options:
+        np_scores, predecessor = pathfinding.dijkstra(world, next_point)
+        in_vornoi_zone = np.full((world.width, world.height), True, dtype=np.bool)
 
-    nextfood_x, nextfood_y = world.food[0]
-    path = pathfinding.find_path_dijkstra(nextfood_x, nextfood_y, predecessor)
-    next_move = pathfinding.get_next_move(world.you.head, path)
+        # Get all points in your Vornoi zone
+        for val in d_matrices.values():
+            in_vornoi_zone = in_vornoi_zone and val - np_scores > 0
+
+        vornoi_area = np.sum(in_vornoi_zone)
+        if vornoi_area > highest_vornoi_area:
+            highest_vornoi_area = vornoi_area
+            highest_scoring_option = next_point
+
+    next_move = pathfinding.get_next_move(world.you.head, [highest_scoring_option])
 
     return {
         "move": next_move
