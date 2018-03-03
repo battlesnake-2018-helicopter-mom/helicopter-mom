@@ -59,12 +59,33 @@ def vornoi_defense(world):
     return pathfinding.get_next_move(world.you.head, [highest_scoring_option])
 
 
+def hungry_mode(world):
+    """ Used when we need food. Dijkstra to nearest food. """
+    distance, predecessor = pathfinding.dijkstra(world, world.you.head)
+
+    nearest_food = None
+    closest_distance = np.inf
+    for fx, fy in world.food:
+        if distance[fy][fx] < closest_distance:
+            closest_distance = distance[fy][fx]
+            nearest_food = (fx, fy)
+
+    if closest_distance == np.inf:
+        # If we can't get to any food, use defense mode
+        return vornoi_defense(world.you.head)
+    else:
+        path = pathfinding.find_path_dijkstra(nearest_food[0], nearest_food[1], predecessor)
+        return pathfinding.get_next_move(world.you.head, path)
+
 
 @app.post("/move")
 def move():
     world = World(request.json)
 
-    next_move = vornoi_defense(world)
+    if world.you.health < 60:
+        next_move = hungry_mode(world)
+    else:
+        next_move = vornoi_defense(world)
 
     return {
         "move": next_move
