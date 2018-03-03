@@ -1,4 +1,5 @@
 import sys
+from helicoptermom.lib.gameobjects import MAP_SNAKE
 
 
 def print_matrix(matrix):
@@ -20,11 +21,11 @@ def neighbors_of(x, y, world):
     assert 0 <= x < world.width, "X coordinate must be in bounds!"
     assert 0 <= y < world.height, "Y coordinate must be in bounds!"
 
-    if x + 1 < world.width:
+    if x + 1 < world.width and world.map[y][x+1] != MAP_SNAKE:
         yield x + 1, y
-    if y + 1 < world.height:
+    if y + 1 < world.height and world.map[y+1][x] != MAP_SNAKE:
         yield x, y + 1
-    if x - 1 >= 0:
+    if x - 1 >= 0 and world.map[y][x-1] != MAP_SNAKE:
         yield x - 1, y
-    if y - 1 >= 0:
+    if y - 1 >= 0 and world.map[y-1][x] != MAP_SNAKE:
         yield x, y - 1
