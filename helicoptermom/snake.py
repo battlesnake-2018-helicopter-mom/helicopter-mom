@@ -25,11 +25,7 @@ def start():
     }
 
 
-@app.post("/move")
-def move():
-
-    world = World(request.json)
-
+def vornoi_defense(world):
     # Consider all food - where would I have to go to get it?
     next_point_options = set()
     dijkstra_scores, predecessor = pathfinding.dijkstra(world, world.you.head)
@@ -60,7 +56,15 @@ def move():
             highest_vornoi_area = vornoi_area
             highest_scoring_option = next_point
 
-    next_move = pathfinding.get_next_move(world.you.head, [highest_scoring_option])
+    return pathfinding.get_next_move(world.you.head, [highest_scoring_option])
+
+
+
+@app.post("/move")
+def move():
+    world = World(request.json)
+
+    next_move = vornoi_defense(world)
 
     return {
         "move": next_move
