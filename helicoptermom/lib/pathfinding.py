@@ -48,6 +48,9 @@ def find_path_dijkstra(x, y, p):
     """
     path = []
     point = p[y][x]
+
+    path.append((x, y))
+
     while point != -1:
         px, py = int(point % p.shape[0]), int(point / p.shape[0])
         path.append((px, py))
