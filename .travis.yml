@@ -1,6 +1,11 @@
 language: python
+
 python:
 - '3.6'
+
+script:
+- gunicorn helicoptermom.snake:app
+
 deploy:
   provider: elasticbeanstalk
   access_key_id: AKIAJNX2RBM2CRTCJ7AA
