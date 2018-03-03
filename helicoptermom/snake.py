@@ -53,7 +53,7 @@ def move():
 
         # Get all points in your Vornoi zone
         for val in d_matrices.values():
-            in_vornoi_zone = in_vornoi_zone and val - np_scores > 0
+            in_vornoi_zone = np.logical_and(in_vornoi_zone, val - np_scores > 0)
 
         vornoi_area = np.sum(in_vornoi_zone)
         if vornoi_area > highest_vornoi_area:
