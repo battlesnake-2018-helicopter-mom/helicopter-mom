@@ -42,7 +42,7 @@ def move():
     enemy_snakes = [snake for snake in world.snakes.values() if snake.id != world.you.id]
     for snake in enemy_snakes:
         d_matrix = pathfinding.dijkstra(world, snake.head)
-        d_matrices.update({snake.id, d_matrix})
+        d_matrices.update({snake.id: d_matrix})
 
     # For each option, simulate snake move and calculate Vornoi zones
     highest_vornoi_area = -1
