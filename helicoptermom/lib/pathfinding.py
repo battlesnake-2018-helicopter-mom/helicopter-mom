@@ -60,11 +60,11 @@ def find_path_dijkstra(x, y, p):
     return path[1:]
 
 
-def dijkstra(world, snake):
+def dijkstra(world, point):
     """Gets the distance "scores" and predecessor matrix from a given snake's
     head.
     :param world: World object to map for the snake.
-    :param snake: Snake to calculate distances from.
+    :param point: Snake to calculate distances from.
     :return: d[] and p[] matrices for each point on the map.
         - p[] matrix uses integers as vertex labels: (y * width) + x
         - None indicates the head of the snake (source node).
@@ -75,9 +75,9 @@ def dijkstra(world, snake):
     visited = np.full((world.width, world.height), False, dtype=np.bool)
 
     # d at the snake's head should be 0 (we're already there, so no cost!)
-    d[snake.head[1]][snake.head[0]] = 0
+    d[point[1]][point[0]] = 0
 
-    pq = [(1, snake.head)]
+    pq = [(1, point)]
     heapify(pq)
     while len(pq) > 0:
         next_vert = heappop(pq)[1]
