@@ -1,4 +1,13 @@
 language: python
-
 python:
-  - "3.6"
+- '3.6'
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: AKIAJNX2RBM2CRTCJ7AA
+  secret_access_key:
+    secure: lA9ucrvjTBpQj2TuCuuQ7YdeaWXp5VWses0xlPYS+x0mJoHmIrVcQPamScGE7a3zljr36E6SFqTztyEN0k0ixYIzIXBrDlEa4KolPAwFSujvImrarhZJuIfPYu2mxDSfbUmKzKh6uTqQ68KPR5JGipfZ3AIlrQXZAMrN7UkSkyDWxi0kQcrvxcQ7bYxzXstgKoV0KcCB6YPlkvvDUdKBoo2ubMJ9y9xqACQ1mbaI9WcCmq2awQ3AvX4D7IgvucL0kR9YFlEBrxU5cAu5va/HVrMrp0T41mK8mBzfe3Wb/Lr2UOXFmHMa+ApcDm5lv4EJCE9r14Lsp0Gugj1FwEyNbaGckBoSsC9XPX0NY4Kv8RxBdGSS4bLN/ibltgwqlMsxHqXE4T+aaqHXCL72VBteDtClj7BiC0kxC91h86b8ZtjcKfxM2ff7CRoHlS9tp+5XQpW3zozuFxE+1PSTgmZk8+Ki38ypjHb3dBCtXHqbmW/9H0iHH0dXAQ7M1nQ0cPefpjbcLcC7+I5s/E9KFjDjux5RwD4Y7N0/U6dz8CDbsUia7iUlxMJsySfvtbK3Mug65IoXf4w5Fb6mAAGpuuwwe1TeM7VNwoM91MqhU3fX75jsu2V1qKJ/Kl3/NgtD6ERcq2vP2C3O9aAK+dRtnDRvwG6GbZL9ecSxi+uLj+evWBs=
+  region: us-east-2
+  app: Helicoptermom-Battlesnake
+  env: helicoptermomBattle-env
+  on:
+    repo: battlesnake-2018-helicopter-mom/helicopter-mom
