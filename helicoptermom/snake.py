@@ -31,14 +31,14 @@ def vornoi_defense(world):
     d_matrices = {}
     enemy_snakes = [snake for snake in world.snakes.values() if snake.id != world.you.id]
     for snake in enemy_snakes:
-        d_matrix = pathfinding.dijkstra(world, snake.head)
+        d_matrix = pathfinding.dijkstra(world.map, snake.head)
         d_matrices.update({snake.id: d_matrix})
 
     # For each option, simulate snake move and calculate Vornoi zones
     highest_vornoi_area = -1
     highest_scoring_option = None
-    for next_point in neighbors_of(world.you.head[0], world.you.head[1], world):
-        np_scores, predecessor = pathfinding.dijkstra(world, next_point)
+    for next_point in neighbors_of(world.you.head[0], world.you.head[1], world.map):
+        np_scores, predecessor = pathfinding.dijkstra(world.map, next_point)
         in_vornoi_zone = np.full((world.width, world.height), True, dtype=np.bool)
 
         # Get all points in your Vornoi zone
@@ -55,12 +55,12 @@ def vornoi_defense(world):
 
 def hungry_mode(world):
     """ Used when we need food. Dijkstra to nearest food. """
-    distance, predecessor = pathfinding.dijkstra(world, world.you.head)
+    distance, predecessor = pathfinding.dijkstra(world.map, world.you.head)
 
     nearest_food = None
     closest_distance = np.inf
     for fx, fy in world.food:
-        if distance[fy][fx] < closest_distance:
+        if distance[fy][fx] < closest_distance and pathfinding.is_safe(fx, fy, world, predecessor):
             closest_distance = distance[fy][fx]
             nearest_food = (fx, fy)
 

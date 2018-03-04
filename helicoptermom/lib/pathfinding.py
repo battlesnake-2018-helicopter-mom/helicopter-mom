@@ -60,19 +60,19 @@ def find_path_dijkstra(x, y, p):
     return path[1:]
 
 
-def dijkstra(world, point):
+def dijkstra(map, point):
     """Gets the distance "scores" and predecessor matrix from a given snake's
     head.
-    :param world: World object to map for the snake.
+    :param map: World map object to map for the snake.
     :param point: Snake to calculate distances from.
     :return: d[] and p[] matrices for each point on the map.
         - p[] matrix uses integers as vertex labels: (y * width) + x
         - None indicates the head of the snake (source node).
         - -1 indicates an inaccessible point.
     """
-    d = np.full((world.width, world.height), np.inf)
-    p = np.full((world.width, world.height), -1)
-    visited = np.full((world.width, world.height), False, dtype=np.bool)
+    d = np.full((map.shape[0], map.shape[1]), np.inf)
+    p = np.full((map.shape[0], map.shape[1]), -1)
+    visited = np.full((map.shape[0], map.shape[1]), False, dtype=np.bool)
 
     # d at the snake's head should be 0 (we're already there, so no cost!)
     d[point[1]][point[0]] = 0
@@ -88,13 +88,13 @@ def dijkstra(world, point):
             continue
 
         # consider neighbors of this vertex
-        for x, y in neighbors_of(nv_x, nv_y, world):
-            if world.map[y][x] == objects.MAP_SNAKE:
+        for x, y in neighbors_of(nv_x, nv_y, map):
+            if map[y][x] == objects.MAP_SNAKE:
                 d[y][x] = -1
                 p[y][x] = -1
             elif d[nv_y][nv_x] + 1 < d[y][x]:
                 d[y][x] = d[nv_y][nv_x] + 1
-                p[y][x] = world.width * nv_y + nv_x
+                p[y][x] = map.shape[0] * nv_y + nv_x
 
                 # re-add to pq if d[] was updated
                 heappush(pq, (d[y][x], (x, y)))
@@ -136,3 +136,22 @@ def buffer_snake(world, snake):
             body_buffer.remove(item)
 
     return body_buffer
+
+
+def is_safe(food_x, food_y, world, predecessor):
+    """ Determines whether or not a piece of food is 'safe'. """
+
+    # get path to food
+    food_path = find_path_dijkstra(food_x, food_y, predecessor)
+
+    # mark map to indicate snake (path into food)
+    map = np.copy(world.map)
+    for px, py in food_path:
+        map[py][px] = objects.MAP_SNAKE
+
+    # run dijkstra, go for it if there's an escape path
+    # we'll consider a path escapable if we can access 50% of the world from it
+    d, p = dijkstra(map, (food_x, food_y))
+    area = np.sum(d != np.inf)
+
+    return area >= 0.5 * world.width * world.height
