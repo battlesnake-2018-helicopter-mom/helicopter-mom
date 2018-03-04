@@ -22,7 +22,8 @@ def start():
         "taunt": "Can I see your manager?",
         "color": "#03A9F4",
         "head_type": "tongue",
-        "tail_type": "block-bum"
+        "tail_type": "block-bum",
+        "head_url": "https://s3-us-west-2.amazonaws.com/flx-editorial-wordpress/wp-content/uploads/2016/01/19133540/seinfeld.jpg"
     }
 
 
