@@ -27,10 +27,6 @@ def start():
 
 
 def vornoi_defense(world):
-    # Consider all food - where would I have to go to get it?
-    next_point_options = set()
-    dijkstra_scores, predecessor = pathfinding.dijkstra(world, world.you.head)
-
     # Calculate d matrices for every snake
     d_matrices = {}
     enemy_snakes = [snake for snake in world.snakes.values() if snake.id != world.you.id]
@@ -70,7 +66,7 @@ def hungry_mode(world):
 
     if closest_distance == np.inf:
         # If we can't get to any food, use defense mode
-        return vornoi_defense(world.you.head)
+        return vornoi_defense(world)
     else:
         path = pathfinding.find_path_dijkstra(nearest_food[0], nearest_food[1], predecessor)
         return pathfinding.get_next_move(world.you.head, path)
@@ -80,7 +76,8 @@ def hungry_mode(world):
 def move():
     world = World(request.json)
 
-    if world.you.health < 60:
+    longest_snake = max(world.snakes.values(), key=lambda s: s.length)
+    if world.you.health < 60 or world.you.length < longest_snake.length:
         next_move = hungry_mode(world)
     else:
         next_move = vornoi_defense(world)
