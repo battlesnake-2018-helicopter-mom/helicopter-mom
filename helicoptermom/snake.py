@@ -40,7 +40,7 @@ def vornoi_defense(world):
     highest_scoring_option = None
     for next_point in neighbors_of(world.you.head[0], world.you.head[1], world.map):
         np_scores, predecessor = pathfinding.dijkstra(world.map, next_point)
-        in_vornoi_zone = np.full((world.width, world.height), True, dtype=np.bool)
+        in_vornoi_zone = np.full((world.height, world.width), True, dtype=np.bool)
 
         # Get all points in your Vornoi zone
         for val in d_matrices.values():

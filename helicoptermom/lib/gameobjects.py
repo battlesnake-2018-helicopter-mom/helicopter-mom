@@ -33,7 +33,7 @@ class World:
         self.turn = request_json["turn"]
 
         # define and populate world map
-        self.map = np.full((self.width, self.height), MAP_EMPTY)
+        self.map = np.full((self.height, self.width), MAP_EMPTY)
 
         self.food = []
         for food_data in request_json["food"]["data"]:
