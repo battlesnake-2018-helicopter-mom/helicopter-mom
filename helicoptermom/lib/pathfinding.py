@@ -52,9 +52,13 @@ def find_path_dijkstra(x, y, p):
     path.append((x, y))
 
     while point != -1:
-        px, py = int(point % p.shape[0]), int(point / p.shape[0])
+        px, py = int(point % p.shape[1]), int(point / p.shape[1])
         path.append((px, py))
         point = p[py][px]
+
+        # Path length cannot be any greater than (width * height)
+        if len(path) > p.size:
+            raise Exception("Error getting path from predecessor matrix!")
 
     path.reverse()
     return path[1:]
@@ -94,7 +98,7 @@ def dijkstra(map, point):
                 p[y][x] = -1
             elif d[nv_y][nv_x] + 1 < d[y][x]:
                 d[y][x] = d[nv_y][nv_x] + 1
-                p[y][x] = map.shape[0] * nv_y + nv_x
+                p[y][x] = map.shape[1] * nv_y + nv_x
 
                 # re-add to pq if d[] was updated
                 heappush(pq, (d[y][x], (x, y)))
